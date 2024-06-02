@@ -3,7 +3,7 @@
 A challenge to build a project each week until I am comfortable with the Rust programming language.
 
 ## Projects
-1. Coming Soon
+1. [DaysTill](daystill/)
 2. Coming Soon
 3. Coming Soon
 4. Coming Soon
