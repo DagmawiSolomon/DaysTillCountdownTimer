@@ -58,12 +58,12 @@
 // }
 
 use chrono::TimeZone;
-use chrono::{Utc};
+use chrono::{Local};
 
 fn main() {
 
-        let today = Utc::now();
-        let target_date = Utc.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
+        let today = Local::now();
+        let target_date = Local.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
         let duration = target_date - today;
 
         let seconds_left = duration.num_seconds();
