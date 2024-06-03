@@ -58,12 +58,12 @@
 // }
 
 use chrono::TimeZone;
-use chrono::{Utc, Local};
+use chrono::{Utc};
 
 fn main() {
-    while(true){
-        let today = Local::now();
-        let target_date = Local.ymd(2024, 9, 11).and_hms(0, 0, 0);
+
+        let today = Utc::now();
+        let target_date = Utc.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
         let duration = target_date - today;
 
         let seconds_left = duration.num_seconds();
@@ -73,6 +73,7 @@ fn main() {
         let seconds_left = seconds_left % (60 * 60);
         let minutes = seconds_left / (60);
         println!("{} {} {}", days, hours, minutes);
-    }
     
+    
+
 }
