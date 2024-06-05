@@ -1,11 +1,13 @@
-use gtk::{prelude::*, Button};
-use gtk::{glib, Application, PolicyType,Label,ListBox,ScrolledWindow ,gio, Switch, Align, FlowBox};
+use gtk::{prelude::*, Button, DrawingArea, ProgressBar};
+use gtk::{glib, Application, PolicyType,Label,CssProvider,ListBox,ScrolledWindow ,gio, Switch, Align, FlowBox};
 use std::thread;
 use std::time::Duration;
 use glib::clone;
 use gio::Settings;
+use std::fs::File;
+use std::path::Path;
 
-
+use gtk::gdk::Display;
 use chrono::TimeZone;
 use chrono::Local;
 
@@ -13,12 +15,26 @@ const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
 
 fn main() -> glib::ExitCode{
         let app = Application::builder().application_id(APP_ID).build();
+
+        app.connect_startup(|_| load_css());
         app.connect_activate(build_ui);
         app.run()
 
         
 }
 
+fn load_css() {
+        
+        let provider = CssProvider::new();
+        
+        provider.load_from_path("src/style.css");
+        gtk::style_context_add_provider_for_display(
+            &Display::default().expect("Could not connect to a display."),
+            &provider,
+            gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+        );
+    }
+    
 
 fn get_date() -> i64{
         let today = Local::now();
@@ -107,11 +123,28 @@ fn build_ui(app: &Application) {
                 //         list_box.append(&label);
                 //      }   
                 let days:i64 = get_date();
-                for number in 0..=days {
-                        let label = Label::new(Some(&number.to_string()));
-                        flow_box.append(&label);
+                // for number in 0..=days {
+                //         let label = Label::new(Some(&number.to_string()));
+                //         flow_box.append(&label);
+                // }
+
+             
+                for number in 0 ..=110{
+                        let rect = Button::new();
+                        rect.set_size_request(20, 20);
+                        if (110-number) > days{
+                                rect.add_css_class("active");
+                        }
+                        else{
+                                rect.add_css_class("disabled"); 
+                        }
+                        flow_box.append(&rect);
                 }
 
+                let pgbar = ProgressBar::new();
+                let days_elapsed:f64 = ((110-days)/110 )as f64;
+                println!("{} {} ", 110-days, days_elapsed);
+                pgbar.set_fraction(0.9);
 
 //     let scrolled_window = ScrolledWindow::builder()
 //         .hscrollbar_policy(PolicyType::Never) // Disable horizontal scrolling
@@ -124,7 +157,7 @@ fn build_ui(app: &Application) {
                .default_width(300)
                .default_height(100)
                .title("Days Till Counter")
-               .child(&flow_box)
+               .child(&pgbar)
                .build();
 
         window.present();
