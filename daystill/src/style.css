@@ -1,0 +1,6 @@
+button.active{
+    background-color: green;
+}
+button.disabled{
+    background-color: gray;
+}
