@@ -1,13 +1,11 @@
-use gtk::{prelude::*, Button, DrawingArea, ProgressBar};
-use gtk::{glib, Application, PolicyType,Label,CssProvider,Grid,GridLayout,ScrolledWindow ,gio, Switch, Align, FlowBox};
-use std::thread;
-use std::time::Duration;
-use glib::clone;
-use gio::Settings;
-use std::fs::File;
-use std::path::Path;
+use gtk::{prelude::*, DrawingArea, ProgressBar};
+use gtk::{glib, Application,Grid, CssProvider};
+
+use gtk::gdk::Display;
 use gtk::cairo::{Context};
 use gtk::prelude::WidgetExt;
+use chrono::TimeZone;
+use chrono::Local;
 
 
 const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
@@ -15,19 +13,48 @@ const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
 fn main() -> glib::ExitCode{
         let app = Application::builder().application_id(APP_ID).build();
 
-
+        app.connect_startup(|_| load_css());
         app.connect_activate(build_ui);
         app.run()
 
         
 }
 
+
+fn load_css() {
+        
+    let provider = CssProvider::new();
+    
+    provider.load_from_path("src/style.css");
+    gtk::style_context_add_provider_for_display(
+        &Display::default().expect("Could not connect to a display."),
+        &provider,
+        gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+    );
+}
+
+
+fn get_date() -> i64{
+    let today = Local::now();
+    let target_date = Local.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
+    let duration = target_date - today;
+
+    let seconds_left = duration.num_seconds();
+    let days = seconds_left / (24 * 60 * 60);
+    let seconds_left = seconds_left % (24 * 60 * 60);
+    let hours = seconds_left / (60 * 60);
+    let seconds_left = seconds_left % (60 * 60);
+    let minutes = seconds_left / (60);
+
+    days
+}
 fn build_ui(app: &Application) {
 
-        
+    let container = gtk::Box::builder().orientation(gtk::Orientation::Vertical).build();
+    let days:i64 = get_date();
         
     let grid_box = Grid::new();
-    grid_box.set_margin_top(20);  
+    grid_box.set_margin_top(15);  
     grid_box.set_margin_bottom(20);  
     grid_box.set_margin_start(20); 
     grid_box.set_margin_end(20); 
@@ -36,7 +63,7 @@ fn build_ui(app: &Application) {
                 let mut count_col = 0;
                 for number in 0 ..=110{
                     let drawing_area = DrawingArea::new();
-                    drawing_area.set_size_request(20, 20);
+                    drawing_area.set_size_request(15, 15);
                 
                     drawing_area.set_draw_func(move|_, cr, _, _| {
                         draw(cr, 96, number);
@@ -45,7 +72,7 @@ fn build_ui(app: &Application) {
                     });
                     
                         count_col = count_col + 1;
-                        if number % 10 == 0{
+                        if number % 21 == 0{
                                 count_row = count_row + 5;
                                 count_col = 0;
                         }
@@ -55,8 +82,26 @@ fn build_ui(app: &Application) {
     
                        
                 }
+
+                let daysleft = format!("In {} days",days);
+                let label: gtk::Label = gtk::Label::new(Some("Holidays"));
+                label.set_xalign(0.0);
+                let daysleftlabel = gtk::Label::new(Some(&daysleft));
+                daysleftlabel.set_xalign(0.0);
+                label.add_css_class("h1");
+                daysleftlabel.add_css_class("h2");
+
+
          
-        
+                let pgbar = ProgressBar::new();
+                let total_days:f64 = 110 as f64;
+                let days_elapsed:f64 = (total_days - days as f64)/total_days;
+                println!("{} {} ", 110-days, days_elapsed);
+                pgbar.set_fraction(days_elapsed);   
+
+                container.append(&label);
+                container.append(&daysleftlabel);
+                container.append(&grid_box);
     
 
     
@@ -70,14 +115,16 @@ fn build_ui(app: &Application) {
                .margin_end(50)
                .default_height(100)
                .title("Days Till Counter")
-               .child(&grid_box)
+               .child(&container)
                .build();
 
+        window.set_decorated(false);
         window.present();
+        window.add_css_class("window");
 }
 fn draw(cr: &Context, days:i32, number:i32) {
-    let width = 12.0;
-    let height = 12.0;
+    let width = 15.0;
+    let height = 15.0;
     let radius = f64::min(width, height) / 2.0; // Radius is half of the minimum dimension
     let center_x = width / 2.0;
     let center_y = height / 2.0;
