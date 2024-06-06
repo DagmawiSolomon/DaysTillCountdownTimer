@@ -4,7 +4,7 @@ use gtk::{glib, Application,Grid, CssProvider};
 use gtk::gdk::Display;
 use gtk::cairo::{Context};
 use gtk::prelude::WidgetExt;
-use chrono::TimeZone;
+use chrono::{DateTime, TimeZone};
 use chrono::Local;
 
 
@@ -33,25 +33,31 @@ fn load_css() {
     );
 }
 
-
-fn get_date() -> i64{
-    let today = Local::now();
-    let target_date = Local.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
-    let duration = target_date - today;
-
-    let seconds_left = duration.num_seconds();
-    let days = seconds_left / (24 * 60 * 60);
-    let seconds_left = seconds_left % (24 * 60 * 60);
-    let hours = seconds_left / (60 * 60);
-    let seconds_left = seconds_left % (60 * 60);
-    let minutes = seconds_left / (60);
-
-    days
+struct DayDifference{
+     day: i64,
 }
+
+
+
+impl DayDifference{
+
+    fn get_date(target_date:DateTime<Local>) -> i64{
+        let today = Local::now();
+        let duration = target_date - today;
+        let seconds_left = duration.num_seconds();
+        let days = seconds_left / (24 * 60 * 60);
+
+       days
+    }
+
+}
+
+
 fn build_ui(app: &Application) {
 
     let container = gtk::Box::builder().orientation(gtk::Orientation::Vertical).build();
-    let days:i64 = get_date();
+    let target_date = Local.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
+    let days:i64 = DayDifference::get_date(target_date);
         
     let grid_box = Grid::new();
     grid_box.set_margin_top(15);  
