@@ -1,5 +1,5 @@
 use gtk::{prelude::*, Button, DrawingArea, ProgressBar};
-use gtk::{glib, Application, PolicyType,Label,CssProvider,ListBox,ScrolledWindow ,gio, Switch, Align, FlowBox};
+use gtk::{glib, Application, PolicyType,Label,CssProvider,Grid,GridLayout,ListBox,ScrolledWindow ,gio, Switch, Align, FlowBox};
 use std::thread;
 use std::time::Duration;
 use glib::clone;
@@ -128,19 +128,37 @@ fn build_ui(app: &Application) {
                 //         flow_box.append(&label);
                 // }
 
+
+
              
+                let grid_box = Grid::new();
+           
+                
+                let mut count_row = 0;
+                let mut count_col = 0;
                 for number in 0 ..=110{
                         let rect = Button::new();
-                        rect.set_size_request(20, 20);
+                        rect.set_size_request(1, 1);
+                        
                         if (110-number) > days{
                                 rect.add_css_class("active");
                         }
                         else{
                                 rect.add_css_class("disabled"); 
-                        }
-                        flow_box.append(&rect);
-                }
 
+                        }
+                        count_col = count_col + 1;
+                        if number % 21 == 0{
+                                count_row = count_row + 5;
+                                count_col = 0;
+                        }
+                        grid_box.set_row_spacing(10);
+                        grid_box.set_column_spacing(10);
+                        grid_box.attach(&rect, count_col, count_row, 1, 1);
+                        println!("{} {} ", count_row, count_col);
+                       
+                }
+                        
                 let pgbar = ProgressBar::new();
                 let total_days:f64 = 110 as f64;
                 let days_elapsed:f64 = (total_days - days as f64)/total_days;
@@ -158,7 +176,7 @@ fn build_ui(app: &Application) {
                .default_width(300)
                .default_height(100)
                .title("Days Till Counter")
-               .child(&pgbar)
+               .child(&grid_box)
                .build();
 
         window.present();
