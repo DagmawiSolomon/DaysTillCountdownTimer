@@ -1,2 +1,3 @@
 target/
 Cargo.lock
+target/.rustc_info.json
