@@ -142,9 +142,10 @@ fn build_ui(app: &Application) {
                 }
 
                 let pgbar = ProgressBar::new();
-                let days_elapsed:f64 = ((110-days)/110 )as f64;
+                let total_days:f64 = 110 as f64;
+                let days_elapsed:f64 = (total_days - days as f64)/total_days;
                 println!("{} {} ", 110-days, days_elapsed);
-                pgbar.set_fraction(0.9);
+                pgbar.set_fraction(days_elapsed);
 
 //     let scrolled_window = ScrolledWindow::builder()
 //         .hscrollbar_policy(PolicyType::Never) // Disable horizontal scrolling
