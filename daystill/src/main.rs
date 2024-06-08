@@ -4,8 +4,12 @@ use gtk::{glib, Application,Grid, CssProvider};
 use gtk::gdk::Display;
 use gtk::cairo::{Context};
 use gtk::prelude::WidgetExt;
-use chrono::{DateTime, TimeZone};
+use chrono::{DateTime, NaiveDate};
 use chrono::Local;
+use serde::{Serialize, Deserialize};
+use std::fs::File;
+use std::io::Read;
+
 
 
 const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
@@ -33,31 +37,14 @@ fn load_css() {
     );
 }
 
-struct DayDifference{
-     day: i64,
-}
 
-
-
-impl DayDifference{
-
-    fn get_date(target_date:DateTime<Local>) -> i64{
-        let today = Local::now();
-        let duration = target_date - today;
-        let seconds_left = duration.num_seconds();
-        let days = seconds_left / (24 * 60 * 60);
-
-       days
-    }
-
-}
 
 
 fn build_ui(app: &Application) {
-
+   
     let container = gtk::Box::builder().orientation(gtk::Orientation::Vertical).build();
-    let target_date = Local.with_ymd_and_hms(2024, 9, 11, 0, 0, 0).unwrap();
-    let days:i64 = DayDifference::get_date(target_date);
+   
+    let days:i64 = DayDifference::get_date();
         
     let grid_box = Grid::new();
     grid_box.set_margin_top(15);  
@@ -110,20 +97,18 @@ fn build_ui(app: &Application) {
                 container.append(&grid_box);
     
 
-    
-          
+    let window_settings:WindowSettings = Settings::new().windowsettings;
     let window = gtk::ApplicationWindow::builder()
                .application(app)
-               .default_width(300)
-               .margin_bottom(50)
-               .margin_end(50)
-               .margin_start(50)
-               .margin_end(50)
-               .default_height(100)
+               .margin_bottom(window_settings.margin_bottom)
+               .margin_end(window_settings.margin_end)
+               .margin_start(window_settings.margin_start)
                .title("Days Till Counter")
                .child(&container)
                .build();
 
+        window.set_resizable(window_settings.resizable);
+        window.set_size_request(-1, -1);
         window.set_decorated(false);
         window.present();
         window.add_css_class("window");
