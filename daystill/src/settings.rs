@@ -10,6 +10,7 @@ pub mod setting {
     #[serde(rename_all = "PascalCase")]
     pub struct Settings {
         pub windowsettings: WindowSettings,
+        pub datetime: DateTime,
         // pub uiconfig: UIConfig,
     }
 
@@ -22,22 +23,46 @@ pub mod setting {
         pub margin_start: i32,
     }
 
-    pub struct TargetDate {
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
+    pub struct DateTime{
+        pub startdate: StartDate,
+        pub enddate: EndDate   
+    }
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
+    pub struct StartDate{
         pub year: i32,
         pub month: u32,
         pub day: u32,
     }
 
-    pub struct DayDifference {
-        pub target_date: TargetDate,
-        pub days_left: i64,
-    }
 
-    impl DayDifference {
-        pub fn get_date() -> i64 {
-            let target_date = NaiveDate::from_ymd_opt(2024, 12, 31).unwrap();
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
+    pub struct EndDate {
+        pub year: i32,
+        pub month: u32,
+        pub day: u32,
+    }
+    // pub struct DayDifference {
+    //     pub end_date: EndDate,
+    //     pub days_left: i64,
+    // }
+    impl DateTime {
+        pub fn get_days_left(&self) -> i64 {
+            let target_date:NaiveDate = NaiveDate::from_ymd_opt(self.enddate.year, self.enddate.month, self.enddate.day).unwrap();
             let today = Local::now().date_naive();
             let days_left = target_date.signed_duration_since(today).num_days();
+            days_left
+        }
+
+        pub fn total_days(&self) -> i64{
+            let start_date:NaiveDate = NaiveDate::from_ymd_opt(self.startdate.year, self.startdate.month, self.startdate.day).unwrap();
+            let end_date:NaiveDate = NaiveDate::from_ymd_opt(self.enddate.year, self.enddate.month, self.enddate.day).unwrap();
+            let days_left = end_date.signed_duration_since(start_date).num_days();
             days_left
         }
     }
@@ -46,10 +71,9 @@ pub mod setting {
     pub struct GridSettings {
         pub row_spacing: i32,
         pub column_spacing: i32,
-        pub margin_top: i32,
-        pub margin_bottom: i32,
-        pub margin_start: i32,
-        pub margin_end: i32,
+        pub grid_width: i32,
+        pub grid_height: i32,
+
     }
 
     #[derive(Debug, Deserialize)]
