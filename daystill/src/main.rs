@@ -16,19 +16,12 @@ const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
 
 fn main() -> glib::ExitCode{
         let app = Application::builder().application_id(APP_ID).build();
-
         app.connect_startup(|_| load_css());
         app.connect_activate(build_ui);
         app.run()
-
-        
 }
-
-
-fn load_css() {
-        
+fn load_css() {    
     let provider = CssProvider::new();
-    
     provider.load_from_path("src/style.css");
     gtk::style_context_add_provider_for_display(
         &Display::default().expect("Could not connect to a display."),
@@ -36,65 +29,50 @@ fn load_css() {
         gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
 }
-
-
-
-
 fn build_ui(app: &Application) {
-   
     let container = gtk::Box::builder().orientation(gtk::Orientation::Vertical).build();
-   
-    let days:i64 = DayDifference::get_date();
-        
+    let days:i64 = DayDifference::get_date();    
     let grid_box = Grid::new();
-    grid_box.set_margin_top(15);  
-    grid_box.set_margin_bottom(20);  
-    grid_box.set_margin_start(20); 
-    grid_box.set_margin_end(20); 
+    grid_box.add_css_class("grid");
+
            
-                let mut count_row = 0;
-                let mut count_col = 0;
-                for number in 0 ..=110{
-                    let drawing_area = DrawingArea::new();
-                    drawing_area.set_size_request(15, 15);
+    let mut count_row = 0;
+    let mut count_col = 0;
+    for number in 0 ..=110{
+        let drawing_area = DrawingArea::new();
+        drawing_area.set_size_request(15, 15);
                 
-                    drawing_area.set_draw_func(move|_, cr, _, _| {
-                        draw(cr, 96, number);
-                       
-                        
-                    });
+        drawing_area.set_draw_func(move|_, cr, _, _| {
+            draw(cr, 96, number);
+        });
                     
-                        count_col = count_col + 1;
-                        if number % 21 == 0{
-                                count_row = count_row + 5;
-                                count_col = 0;
-                        }
-                        grid_box.set_row_spacing(2);
-                        grid_box.set_column_spacing(2);
-                        grid_box.attach(&drawing_area, count_col, count_row, 1, 1);
-    
-                       
-                }
+        count_col = count_col + 1;
+        if number % 21 == 0{
+            count_row = count_row + 5;
+            count_col = 0;
+        }
+        grid_box.set_row_spacing(2);
+        grid_box.set_column_spacing(2);
+        grid_box.attach(&drawing_area, count_col, count_row, 1, 1);                    
+    }
 
-                let daysleft = format!("In {} days",days);
-                let label: gtk::Label = gtk::Label::new(Some("Holidays"));
-                label.set_xalign(0.0);
-                let daysleftlabel = gtk::Label::new(Some(&daysleft));
-                daysleftlabel.set_xalign(0.0);
-                label.add_css_class("h1");
-                daysleftlabel.add_css_class("h2");
+    let daysleft = format!("In {} days",days);
+    let label: gtk::Label = gtk::Label::new(Some("Holidays"));
+    label.set_xalign(0.0);
+    let daysleftlabel = gtk::Label::new(Some(&daysleft));
+    daysleftlabel.set_xalign(0.0);
+    label.add_css_class("h1");
+    daysleftlabel.add_css_class("h2");
+     
+    let pgbar = ProgressBar::new();
+    let total_days:f64 = 110 as f64;
+    let days_elapsed:f64 = (total_days - days as f64)/total_days;
+    println!("{} {} ", 110-days, days_elapsed);
+    pgbar.set_fraction(days_elapsed);   
 
-
-         
-                let pgbar = ProgressBar::new();
-                let total_days:f64 = 110 as f64;
-                let days_elapsed:f64 = (total_days - days as f64)/total_days;
-                println!("{} {} ", 110-days, days_elapsed);
-                pgbar.set_fraction(days_elapsed);   
-
-                container.append(&label);
-                container.append(&daysleftlabel);
-                container.append(&grid_box);
+    container.append(&label);
+    container.append(&daysleftlabel);
+    container.append(&grid_box);
     
 
     let window_settings:WindowSettings = Settings::new().windowsettings;
@@ -107,11 +85,11 @@ fn build_ui(app: &Application) {
                .child(&container)
                .build();
 
-        window.set_resizable(window_settings.resizable);
-        window.set_size_request(-1, -1);
-        window.set_decorated(false);
-        window.present();
-        window.add_css_class("window");
+    window.set_resizable(window_settings.resizable);
+    window.set_size_request(-1, -1);
+    window.set_decorated(false);
+    window.present();
+    window.add_css_class("window");
 }
 fn draw(cr: &Context, days:i32, number:i32) {
     let width = 15.0;

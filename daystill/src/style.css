@@ -1,3 +1,8 @@
+.grid{
+    margin:20px;
+    row-spacing: 2px;
+    column-spacing: 2px;
+}
 .h1{
     font-size: 25px;
     font-weight: bold;
