@@ -11,6 +11,7 @@ pub mod setting {
     pub struct Settings {
         pub windowsettings: WindowSettings,
         pub datetime: DateTime,
+        pub widgets: Widgets
         // pub uiconfig: UIConfig,
     }
 
@@ -67,19 +68,35 @@ pub mod setting {
         }
     }
 
+
     #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
+    pub struct Color{
+        pub r:f64,
+        pub g:f64,
+        pub b:f64
+    }
+
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
     pub struct GridSettings {
-        pub row_spacing: i32,
-        pub column_spacing: i32,
-        pub grid_width: i32,
-        pub grid_height: i32,
-
+        pub row_spacing: u32,
+        pub column_spacing: u32,
+        pub width: i32,
+        pub height: i32,
+        pub days_passed_color:Color,
+        pub days_left_color:Color
     }
 
     #[derive(Debug, Deserialize)]
-    pub struct UIConfig {
-        pub gridsettings: GridSettings,
+    #[serde(rename_all = "PascalCase")]
+    pub struct Widgets {
+       pub widget_type: String,
+       pub grid: GridSettings,
     }
+
+   
 
     impl Settings {
         pub fn new() -> Settings {

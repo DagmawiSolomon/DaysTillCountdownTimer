@@ -2,13 +2,13 @@ use gtk::{prelude::*, DrawingArea, ProgressBar};
 use gtk::{glib, Application,Grid, CssProvider};
 
 use gtk::gdk::Display;
-use gtk::cairo::{Context};
+use gtk::cairo::Context;
 use gtk::prelude::WidgetExt;
 
 mod settings;
 
 
-use settings::setting::{EndDate, Settings, StartDate};
+use settings::setting::Settings;
 use settings::setting::DateTime;
 use settings::setting::WindowSettings;
 
@@ -41,7 +41,7 @@ fn build_ui(app: &Application) {
 
 
     let (label, daysleftlabel)=  add_countdown_labels(days_left);
-    github_grid(days_left, total_days, &grid_box, &container);
+    github_grid(days_left, total_days, &grid_box);
     progress_bar(days_left, total_days);
 
     container.append(&daysleftlabel);
@@ -68,7 +68,6 @@ fn draw_window(app: &Application, container: &gtk::Box) {
     window.set_decorated(false);
     window.present();
     window.add_css_class("window");
-    
 }
 
 
@@ -78,12 +77,13 @@ fn progress_bar(days_left:i64, total_days: i64){
     pgbar.set_fraction(days_elapsed);   
     pgbar.add_css_class("grid");
 }
-fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid, container:&gtk::Box){
+fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid){
     let mut count_row = 0;
     let mut count_col = 0;
+    let grid_settings: settings::setting::GridSettings= Settings::new().widgets.grid;
     for number in 0 ..=total_days{
         let drawing_area = DrawingArea::new();
-        drawing_area.set_size_request(15, 15);
+        drawing_area.set_size_request(grid_settings.width, grid_settings.height);
                 
         drawing_area.set_draw_func(move|_, cr, _, _| {
             draw_github_grid(cr, days_left, number, total_days);
@@ -94,28 +94,31 @@ fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid, container:&gtk::
             count_row = count_row + 5;
             count_col = 0;
         }
-        grid_box.set_row_spacing(2);
-        grid_box.set_column_spacing(2);
+        grid_box.set_row_spacing(grid_settings.row_spacing);
+        grid_box.set_column_spacing(grid_settings.column_spacing);
         grid_box.attach(&drawing_area, count_col, count_row, 1, 1);                    
     }
-   
 }
 fn draw_github_grid(cr: &Context, days:i64, number:i64, total_days: i64) {
-    let width = 15.0;
-    let height = 15.0;
+    let grid_settings: settings::setting::GridSettings= Settings::new().widgets.grid;
+    let width = grid_settings.width as f64;
+    let height = grid_settings.height as f64;
     let radius = f64::min(width, height) / 2.0; 
     let center_x = width / 2.0;
     let center_y = height / 2.0;
 
+
     cr.arc(center_x, center_y, radius, 0.0, 2.0 * std::f64::consts::PI);
 
     if (total_days-number) > days{
-        cr.set_source_rgb(0.2235, 0.8275, 0.3255);   
+        let color = grid_settings.days_passed_color;
+        cr.set_source_rgb(color.r/255.0, color.g/255.0, color.b/255.0);   
     }
     else{
-        cr.set_source_rgb(0.0863, 0.1059, 0.1333);
+        let color = grid_settings.days_left_color;
+        cr.set_source_rgb(color.r/255.0, color.g/255.0, color.b/255.0);   
     }
-    cr.fill();
+    let _ = cr.fill();
 
 }
 

@@ -16,6 +16,26 @@
         "Month":9,
         "Day":11
       }  
+    },
+    "Widgets":{
+      "WidgetType":"Grid",
+      "Grid":{
+        "Width": 15,
+        "Height": 15,
+        "RowSpacing":5,
+        "ColumnSpacing":5,
+        "DaysPassedColor": {
+          "R": 58,
+          "G": 211,
+          "B": 82
+        },
+        "DaysLeftColor": {
+          "R": 22,
+          "G": 26,
+          "B": 33
+        }
+      }
+
     }
   }
   
