@@ -4,13 +4,13 @@ use gtk::{glib, Application,Grid, CssProvider};
 use gtk::gdk::Display;
 use gtk::cairo::{Context};
 use gtk::prelude::WidgetExt;
-use chrono::{DateTime, NaiveDate};
-use chrono::Local;
-use serde::{Serialize, Deserialize};
-use std::fs::File;
-use std::io::Read;
+
+mod settings;
 
 
+use settings::setting::Settings;
+use settings::setting::DayDifference;
+use settings::setting::WindowSettings;
 
 const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
 
