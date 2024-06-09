@@ -12,9 +12,9 @@
         "Day":24
       },
       "Enddate":{
-        "Year":2024,
-        "Month":9,
-        "Day":11
+        "Year":2025,
+        "Month":1,
+        "Day":1
       }  
     },
     "Widgets":{
@@ -24,19 +24,20 @@
          "Alignment": "start" 
       },
       "Grid":{
-        "Width": 15,
-        "Height": 15,
+        "Width": 12,
+        "Height": 12,
         "RowSpacing":5,
+        "RowWidth":15,
         "ColumnSpacing":5,
         "DaysPassedColor": {
-          "R": 58,
-          "G": 211,
-          "B": 82
+          "R": 45,
+          "G": 186,
+          "B": 78
         },
         "DaysLeftColor": {
-          "R": 22,
-          "G": 26,
-          "B": 33
+          "R": 36,
+          "G": 41,
+          "B": 46
         }
       }
 

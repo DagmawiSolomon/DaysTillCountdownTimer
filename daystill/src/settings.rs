@@ -83,6 +83,7 @@ pub mod setting {
     pub struct GridSettings {
         pub row_spacing: u32,
         pub column_spacing: u32,
+        pub row_width: i64,
         pub width: i32,
         pub height: i32,
         pub days_passed_color:Color,

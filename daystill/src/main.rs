@@ -1,6 +1,6 @@
 use std::fmt::Alignment;
 
-use gtk::{prelude::*, DrawingArea, ProgressBar};
+use gtk::{prelude::*, DrawingArea, HeaderBar, ProgressBar};
 use gtk::{glib, Application,Grid, CssProvider};
 
 use gtk::gdk::Display;
@@ -44,12 +44,19 @@ fn build_ui(app: &Application) {
 
     let (label, daysleftlabel)=  add_countdown_labels(days_left);
     github_grid(days_left, total_days, &grid_box);
-    progress_bar(days_left, total_days);
+    let pg_bar = progress_bar(days_left, total_days);
 
+
+    let widget_type = Settings::new().widgets.widget_type;
 
     container.append(&label);
     container.append(&daysleftlabel);
-    container.append(&grid_box);
+    match widget_type.as_str() {
+        "Grid" => container.append(&grid_box),
+        "ProgressBar" => container.append(&pg_bar),
+        _ => (), // You might need a default case
+    }
+  
 
     draw_window(app,&container);
 
@@ -63,22 +70,32 @@ fn draw_window(app: &Application, container: &gtk::Box) {
                .margin_bottom(window_settings.margin_bottom)
                .margin_end(window_settings.margin_end)
                .margin_start(window_settings.margin_start)
+               .title("")
                .child(container)
                .build();
 
+    let header_bar = HeaderBar::new();
+    header_bar.set_decoration_layout(Some(":close"));
+
+
+    
+    window.set_titlebar(Some(&header_bar));
     window.set_resizable(window_settings.resizable);
     window.set_size_request(-1, -1);
     window.set_decorated(true);
     window.present();
     window.add_css_class("window");
+
+    
 }
 
 
-fn progress_bar(days_left:i64, total_days: i64){
+fn progress_bar(days_left:i64, total_days: i64) -> ProgressBar{
     let pgbar = ProgressBar::new();
     let days_elapsed:f64 = (total_days as f64 - days_left as f64)/ total_days as f64;
     pgbar.set_fraction(days_elapsed);   
-    pgbar.add_css_class("grid");
+    pgbar.add_css_class("progressbar");
+    pgbar
 }
 fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid){
     let mut count_row = 0;
@@ -93,7 +110,7 @@ fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid){
         });
                     
         count_col = count_col + 1;
-        if number % 21 == 0{
+        if number % grid_settings.row_width == 0{
             count_row = count_row + 1;
             count_col = 0;
         }
