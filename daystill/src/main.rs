@@ -1,5 +1,3 @@
-use std::fmt::Alignment;
-
 use gtk::{prelude::*, DrawingArea, HeaderBar, ProgressBar};
 use gtk::{glib, Application,Grid, CssProvider};
 
