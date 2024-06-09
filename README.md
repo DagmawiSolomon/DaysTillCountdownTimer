@@ -1,29 +1,23 @@
-# A Project A Week - Rust Edition
+# Days Till Counter
 
-A challenge to build a project each week until I am comfortable with the Rust programming language.
+Days Till Counter is a simple application built in Rust using GTK4 to count the days until a specific date.
 
-## Projects
-1. [DaysTill](daystill/)
-2. Coming Soon
-3. Coming Soon
-4. Coming Soon
-5. Coming Soon
-6. Coming Soon
-7. Coming Soon
-8. Coming Soon
-9. Coming Soon
-10. Coming Soon
-11. Coming Soon
-12. Coming Soon
-13. Coming Soon
-14. Coming Soon
-15. Coming Soon
+## Features
+
+- Set a target date to count down to.
+- Display the number of days remaining until the target date.
+- Simple and intuitive user interface.
+
+## Requirements
+
+- Rust
+- GTK4
+
 
 ## Contributing
-If you have suggestions or improvements, feel free to open an issue or submit a pull request.
+
+Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
 
 ## License
-This repository is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more information.
 
-## Contact
-For questions or suggestions, please reach out via [Telegram](https://t.me/dagm000) [Email](mailto:dagmawibedane@gmail.com).
+This project is licensed under the [MIT License](LICENSE).
