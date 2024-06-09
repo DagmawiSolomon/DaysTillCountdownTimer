@@ -1,3 +1,5 @@
+use std::fmt::Alignment;
+
 use gtk::{prelude::*, DrawingArea, ProgressBar};
 use gtk::{glib, Application,Grid, CssProvider};
 
@@ -44,8 +46,9 @@ fn build_ui(app: &Application) {
     github_grid(days_left, total_days, &grid_box);
     progress_bar(days_left, total_days);
 
-    container.append(&daysleftlabel);
+
     container.append(&label);
+    container.append(&daysleftlabel);
     container.append(&grid_box);
 
     draw_window(app,&container);
@@ -65,7 +68,7 @@ fn draw_window(app: &Application, container: &gtk::Box) {
 
     window.set_resizable(window_settings.resizable);
     window.set_size_request(-1, -1);
-    window.set_decorated(false);
+    window.set_decorated(true);
     window.present();
     window.add_css_class("window");
 }
@@ -91,7 +94,7 @@ fn github_grid(days_left:i64, total_days: i64, grid_box: &Grid){
                     
         count_col = count_col + 1;
         if number % 21 == 0{
-            count_row = count_row + 5;
+            count_row = count_row + 1;
             count_col = 0;
         }
         grid_box.set_row_spacing(grid_settings.row_spacing);
@@ -123,15 +126,27 @@ fn draw_github_grid(cr: &Context, days:i64, number:i64, total_days: i64) {
 }
 
 
-fn add_countdown_labels(days_left:i64) -> (gtk::Label, gtk::Label){
-    let daysleft = format!("In {} days",days_left);
-    let label: gtk::Label = gtk::Label::new(Some("Holidays"));
-    label.set_xalign(0.0);
-    let daysleftlabel = gtk::Label::new(Some(&daysleft));
-    daysleftlabel.set_xalign(0.0);
-    label.add_css_class("h1");
-    daysleftlabel.add_css_class("h2");
+fn create_labels(text:&str,alignment: &str ,class:&str)-> gtk::Label{
+    let label: gtk::Label = gtk::Label::new(Some(&text));
+    match alignment {
+        "start" => label.set_xalign(0.0),
+        "center" => label.set_xalign(0.5),
+        "end" => label.set_xalign(1.0),
+        _ => panic!("Invalid alignment: {}", alignment),
+    };
+    label.add_css_class(class);
+    label
+}
 
-    (daysleftlabel, label)
+fn add_countdown_labels(days_left:i64) -> (gtk::Label, gtk::Label){
+    let label_text: String= Settings::new().widgets.label.text;
+    let alignment: String= Settings::new().widgets.label.alignment;
+    let dayslefttext = format!("In {} days",days_left);
+    let header: gtk::Label = create_labels(&label_text, &alignment,"h1");
+    let header2:gtk::Label  = create_labels(&dayslefttext, &alignment,"h2");
+
+    (header, header2)
+    
+
 
 }

@@ -89,14 +89,22 @@ pub mod setting {
         pub days_left_color:Color
     }
 
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "PascalCase")]
+    pub struct Label {
+        pub text: String,
+        pub alignment: String,
+     }
+
+
     #[derive(Debug, Deserialize)]
     #[serde(rename_all = "PascalCase")]
     pub struct Widgets {
        pub widget_type: String,
+       pub label: Label,
        pub grid: GridSettings,
     }
-
-   
 
     impl Settings {
         pub fn new() -> Settings {
