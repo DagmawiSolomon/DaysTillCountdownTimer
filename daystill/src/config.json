@@ -9,16 +9,16 @@
       "Startdate":{
         "Year":2024,
         "Month":5,
-        "Day":24
+        "Day":25
       },
       "Enddate":{
-        "Year":2025,
-        "Month":1,
-        "Day":1
+        "Year":2024,
+        "Month":9,
+        "Day":11
       }  
     },
     "Widgets":{
-      "WidgetType":"Grid",
+      "WidgetType":"ProgressBar",
       "Label": {
         "Text": "Deadline",
          "Alignment": "start" 
