@@ -1,4 +1,15 @@
-# Installation Guide for Days Till Counter
+
+# Days Till Counter
+
+![Demo Image 2](demo1.png)
+![Demo Image 3 - progress bar](demo2.png)
+Days Till Counter is a simple application built in Rust using GTK4 to count the days until a specific date.
+
+## Features
+
+- Set a target date to count down to.
+- Display the number of days remaining until the target date.
+- Simple and intuitive user interface.
 
 ## Prerequisites
 
