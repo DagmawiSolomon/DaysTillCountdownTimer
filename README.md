@@ -51,6 +51,12 @@ cargo run
 - Check the `Cargo.toml` file for any missing dependencies or incorrect versions.
 - If you encounter any issues, consult the [GTK4-rs book](https://gtk-rs.org/gtk4-rs/stable/latest/book/) and the [Rust documentation](https://doc.rust-lang.org/book/).
 
+
+## Configuration
+
+The application can be configured using a `config.json` file. For detailed information on how to configure the application, see the [Configuration Guide](CONFIGURATION.md).
+
+
 ## Contributing
 
 Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request on the [GitHub repository](https://github.com/DagmawiSolomon/DaysTillCountdownTimer).
