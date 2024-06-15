@@ -1,3 +1,4 @@
+Sure, here are the updated instructions including help messages for Windows and macOS users to find the path to the compiled binary file and set up automatic running:
 
 # Days Till Counter
 
@@ -45,17 +46,81 @@ After a successful build, you can run the application using Cargo:
 cargo run
 ```
 
+## Finding the Compiled Binary
+
+After building the application, the compiled binary file will be located in the `target/release` directory within your project folder. You can find the path to the compiled binary file by navigating to this directory:
+
+```bash
+cd target/release
+```
+
+The binary file will be named `daystill` (or `daystill.exe` on Windows). You can use the full path to this binary file in your system's task scheduler or crontab to automate running the program.
+
+### Windows
+
+To find the path to the compiled binary:
+
+1. Open File Explorer and navigate to your project directory.
+2. Go to the `target\release` folder.
+3. Note the full path to `daystill.exe`.
+
+To run your program every day at a specific time or every time the computer boots:
+
+1. Open Task Scheduler.
+2. Click on "Create Basic Task".
+3. Follow the prompts to set the task name, description, and trigger (daily or at startup).
+4. In the "Action" section, select "Start a program" and browse to the location of `daystill.exe`.
+5. Complete the setup and save the task.
+
+### macOS
+
+To find the path to the compiled binary:
+
+1. Open Finder and navigate to your project directory.
+2. Go to the `target/release` folder.
+3. Note the full path to `daystill`.
+
+To run your program every day at a specific time or every time the computer boots:
+
+1. Open Terminal.
+2. Type `crontab -e` to edit your user's crontab file.
+3. Add the following lines to run your program at reboot or daily at a specific time:
+
+```bash
+# To run the program every time the computer boots
+@reboot /path/to/your/program
+# To run the program at a specific time every day
+30 14 * * * /path/to/your/program
+```
+
+Replace `/path/to/your/program` with the path to your compiled binary file. For example, if your binary file is located in `target/release/daystill`, you would use `/full/path/to/target/release/daystill`.
+
+### Linux
+
+To run your program every day at a specific time or every time the computer boots:
+
+1. Open a terminal.
+2. Type `crontab -e` to edit your user's crontab file.
+3. Add the following lines to run your program at reboot or daily at a specific time:
+
+```bash
+# To run the program every time the computer boots
+@reboot /path/to/your/program
+# To run the program at a specific time every day
+30 14 * * * /path/to/your/program
+```
+
+Replace `/path/to/your/program` with the path to your compiled binary file. For example, if your binary file is located in `target/release/daystill`, you would use `/full/path/to/target/release/daystill`.
+
 ## Troubleshooting
 
 - Ensure all dependencies are correctly installed and configured.
 - Check the `Cargo.toml` file for any missing dependencies or incorrect versions.
 - If you encounter any issues, consult the [GTK4-rs book](https://gtk-rs.org/gtk4-rs/stable/latest/book/) and the [Rust documentation](https://doc.rust-lang.org/book/).
 
-
 ## Configuration
 
 The application can be configured using a `config.json` file. For detailed information on how to configure the application, see the [Configuration Guide](CONFIGURATION.md).
-
 
 ## Contributing
 
@@ -64,4 +129,3 @@ Contributions are welcome! If you have any suggestions, bug reports, or feature 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-

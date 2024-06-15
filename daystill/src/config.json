@@ -13,12 +13,12 @@
       },
       "Enddate":{
         "Year":2024,
-        "Month":9,
+        "Month":15,
         "Day":11
       }  
     },
     "Widgets":{
-      "WidgetType":"ProgressBar",
+      "WidgetType":"Grid",
       "Label": {
         "Text": "Deadline",
          "Alignment": "start" 
