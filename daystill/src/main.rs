@@ -6,12 +6,11 @@ use gtk::cairo::Context;
 use gtk::prelude::WidgetExt;
 
 mod settings;
-
+use settings::setting::get_assets_path;
 
 use settings::setting::Settings;
 use settings::setting::DateTime;
 use settings::setting::WindowSettings;
-
 
 const APP_ID: &str = "org.gtk_rs.DaysTillCounter";
 
@@ -23,13 +22,14 @@ fn main() -> glib::ExitCode{
 }
 fn load_css() {    
     let provider = CssProvider::new();
-    provider.load_from_path("src/style.css");
+    provider.load_from_path(get_assets_path("assets/style.css").unwrap());
     gtk::style_context_add_provider_for_display(
         &Display::default().expect("Could not connect to a display."),
         &provider,
         gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
 }
+
 fn build_ui(app: &Application) {
     let container = gtk::Box::builder().orientation(gtk::Orientation::Vertical).build();  
     let grid_box = Grid::new();

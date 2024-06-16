@@ -3,9 +3,32 @@ use serde_json;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::Read;
+use std::env;
+use std::path::PathBuf;
+
 
 pub mod setting {
     use super::*;
+
+    pub fn get_assets_path(relative_path: &str) -> Result<PathBuf, String> {
+        // Get the path of the current executable
+        let exe_path = env::current_exe().map_err(|e| format!("Failed to get the executable path: {}", e))?;
+        
+        // Get the directory where the executable is located
+        let exe_dir = exe_path.parent().ok_or_else(|| "Failed to get the parent directory of the executable".to_string())?;
+    
+        // Navigate up the directory structure to the base project directory
+        let project_dir = exe_dir
+            .parent()
+            .and_then(|p| p.parent())
+            .ok_or_else(|| "Failed to navigate to the project directory".to_string())?;
+        
+        // Construct the path to the requested file within the assets directory
+        let assets_path = project_dir.join(relative_path);
+        
+        Ok(assets_path)
+    }
+
     #[derive(Debug, Deserialize)]
     #[serde(rename_all = "PascalCase")]
     pub struct Settings {
@@ -109,11 +132,13 @@ pub mod setting {
 
     impl Settings {
         pub fn new() -> Settings {
-            let mut file = File::open("src/config.json").unwrap();
-            let mut data = String::new();
+    
+            let mut file = File::open(get_assets_path("assets/config.json").unwrap()).unwrap();
+            let mut data: String = String::new();
             file.read_to_string(&mut data).unwrap();
             let settings: Settings = serde_json::from_str(&data).expect("JSON was not well-formatted");
             settings
         }
     }
 }
+
